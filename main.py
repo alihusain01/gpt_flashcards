@@ -1,8 +1,13 @@
-from pdf_parser import *
-from gpt_API import *
+from API.pdf_parser import *
+from API.gpt_API import *
+from __init__ import create_app
 
-text = parse_pdf()
+# def test_api():
+#     text = parse_pdf()
+#     print("PDF is parsed")
+#     print(make_response(text))
 
-print("PDF is parsed")
+app = create_app()
 
-print(make_response(text))
+if __name__ == '__main__':
+    app.run(debug=True)

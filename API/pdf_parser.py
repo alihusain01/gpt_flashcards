@@ -8,5 +8,3 @@ def parse_pdf():
 
     return text
 
-print(parse_pdf())
-
