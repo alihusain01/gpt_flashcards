@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import FlashcardList from "./FlashcardList";
 import axios from "axios";
+import DropzoneComponent from "./Dropzone";
 
 function App() {
   const [flashcards, setFlashcards] = useState(SAMPLE_FLASHCARDS);
@@ -41,6 +42,11 @@ function App() {
           <button> Button </button>
         </a>
       </div>
+
+      <div className = "drop-zone">
+        <DropzoneComponent />
+      </div>
+      
 
       <div className="container">
         <FlashcardList flashcards={flashcards} />
