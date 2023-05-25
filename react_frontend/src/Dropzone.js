@@ -1,109 +1,111 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useDropzone } from "react-dropzone";
 //import PdfParse from 'pdf-parse';
+import pdfjsLib from "pdfjs-dist";
 
 const baseStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '20px',
-    borderWidth: 2,
-    borderRadius: 2,
-    borderColor: '#eeeeee',
-    borderStyle: 'dashed',
-    backgroundColor: '#fafafa',
-    color: '#bdbdbd',
-    transition: 'border .3s ease-in-out',
-    cursor: 'pointer'
-  };
-  
-  const activeStyle = {
-    borderColor: '#2196f3'
-  };
-  
-  const acceptStyle = {
-    borderColor: '#00e676'
-  };
-  
-  const rejectStyle = {
-    borderColor: '#ff1744'
-  };
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  padding: "20px",
+  borderWidth: 2,
+  borderRadius: 2,
+  borderColor: "#eeeeee",
+  borderStyle: "dashed",
+  backgroundColor: "#fafafa",
+  color: "#bdbdbd",
+  transition: "border .3s ease-in-out",
+  cursor: "pointer",
+};
+
+const activeStyle = {
+  borderColor: "#2196f3",
+};
+
+const acceptStyle = {
+  borderColor: "#00e676",
+};
+
+const rejectStyle = {
+  borderColor: "#ff1744",
+};
 
 function DropzoneComponent(props) {
-    const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState([]);
 
-    
-    // function convertPdfToText(pdfFile) {
-    
-    // const pdfParse = require('pdf-parse');
-    // return new Promise((resolve, reject) => {
-    //     const reader = new FileReader();
+  // Import necessary dependencies
+  const PDFJS = require("pdfjs-dist");
 
-    //     reader.onload = function (event) {
-    //     const pdfData = event.target.result;
+  // Function to convert PDF to text
+  async function convertPdfToText(pdfFile) {
+    try {
+      // Load the PDF document
+      const pdf = await PDFJS.getDocument(pdfFile).promise;
 
-    //     pdfParse(pdfData)
-    //         .then((data) => {
-    //         const text = data.text;
-    //         resolve(text);
-    //         })
-    //         .catch((error) => {
-    //         reject(error);
-    //         });
-    //     };
+      // Initialize the text content variable
+      let textContent = "";
 
-    //     reader.onerror = function (event) {
-    //     reject(new Error('Error occurred while reading the file.'));
-    //     };
+      // Iterate over each page of the PDF
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+        // Get the page
+        const page = await pdf.getPage(pageNumber);
 
-    //     reader.readAsArrayBuffer(pdfFile);
-    // });
-    // }
+        // Extract the text content from the page
+        const pageText = await page.getTextContent();
+        const pageStrings = pageText.items.map((item) => item.str);
+        textContent += pageStrings.join(" ");
+      }
 
-
-    // const onDrop = useCallback(acceptedFiles => {
-    // const uploadedFile = acceptedFiles[0];
-    // console.log(convertPdfToText(uploadedFile));
-    // }, [convertPdfToText]);
-
-    function convertPdfToText(){
-        return;
+      // Return the extracted text
+      return textContent;
+    } catch (error) {
+      console.error("Error converting PDF to text:", error);
+      return null;
     }
-      
-    const onDrop = useCallback(acceptedFiles => {
-        const uploadedFile = acceptedFiles[0];
-        console.log(convertPdfToText(uploadedFile));
-        }, [convertPdfToText]);
-      
-  
-    const {
-      getRootProps,
-      getInputProps,
-      isDragActive,
-      isDragAccept,
-      isDragReject
-    } = useDropzone({
-      onDrop,
-      accept: 'image/jpeg, image/png'
-    });
-  
-    const style = useMemo(() => ({
+  }
+
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      const uploadedFile = acceptedFiles[0];
+      console.log("uploaded file: ");
+      console.log(uploadedFile);
+      //console.log(convertPdfToText(uploadedFile));
+    },
+    [convertPdfToText]
+  );
+
+  // const onDrop = useCallback(acceptedFiles => {
+  //     const uploadedFile = acceptedFiles[0];
+  //     console.log(convertPdfToText(uploadedFile));
+  //     }, [convertPdfToText]);
+
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    isDragAccept,
+    isDragReject,
+  } = useDropzone({
+    onDrop
+    //   accept: 'image/jpeg, image/png'
+  });
+
+  const style = useMemo(
+    () => ({
       ...baseStyle,
       ...(isDragActive ? activeStyle : {}),
       ...(isDragAccept ? acceptStyle : {}),
-      ...(isDragReject ? rejectStyle : {})
-    }), [
-      isDragActive,
-      isDragReject,
-      isDragAccept
-    ]);
-  
-    return (
-      <div {...getRootProps({style})}>
-        <input {...getInputProps()} />
-        <div>Drag and drop your powerpoints here.</div>
-      </div>
-    )
-  }
+      ...(isDragReject ? rejectStyle : {}),
+    }),
+    [isDragActive, isDragReject, isDragAccept]
+  );
+
+  return (
+    <div {...getRootProps({ style })}>
+      <input {...getInputProps()} />
+      <div>Drag and drop your powerpoints here.</div>
+    </div>
+  );
+}
 
 export default DropzoneComponent;
