@@ -2,27 +2,7 @@ import React, { useEffect, useState } from "react";
 import FlashcardList from "./FlashcardList";
 import axios from "axios";
 import FormData from "form-data";
-import DropzoneComponent from "./Dropzone";
-
-/* Filepond Implementation Dependencies */
-import ReactDOM from "react-dom";
-
-// Import React FilePond
-import { FilePond, registerPlugin } from "react-filepond";
-
-// Import FilePond styles
-import "filepond/dist/filepond.min.css";
-
-// Import the Image EXIF Orientation and Image Preview plugins
-// Note: These need to be installed separately
-// `npm i filepond-plugin-image-preview filepond-plugin-image-exif-orientation --save`
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-
-// Register the plugins
-registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
-
+import { GlobalWorkerOptions } from "pdfjs-dist/build/pdf.worker.entry";
 
 
 function App() {
@@ -47,29 +27,61 @@ function App() {
     });
   }, []);
 
+  /* Helper function for the above question API which can be deleted later */
   function decodeString(str) {
     const textArea = document.createElement("textarea");
     textArea.innerHTML = str;
     return textArea.value;
   }
 
-  // This is for filepond
+  // Uploading PDF code
+  // const pdfjs = (require("pdfjs-dist/build/pdf")).default;
+
+  // Function to convert PDF to text
+  async function getContent(src) {
+    console.log("bp1");
+    const pdfjs = await import("../../node_modules/pdfjs-dist/build/pdf.js");
+    pdfjs.GlobalWorkerOptions.workerSrc =
+      "../../node_modules/pdfjs-dist/build/pdf.worker.js";
+
+    console.log("bp2");
+
+    const doc = await pdfjs.getDocument(src).promise;
+    console.log("bp3");
+    const page = await doc.getPage(1);
+    console.log("bp4");
+    return await page.getTextContent();
+  }
+
+  async function getItems(src) {
+    const content = await getContent(src);
+    const items = content.items.map((item) => {
+      console.log(item.str);
+    });
+    return items;
+  }
+
+  /* Handle File Upload to Local Server */
   const [files, setFiles] = useState([]);
 
   const upload = (e) => {
     e.preventDefault();
     let formData = new FormData();
     formData.append("screenshot", files);
-    console.log(formData)
-    axios.post("http://localhost:4000/", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }).then((res) => {
-      console.log("Success ", res);
-    }).catch(err => {
-      console.log("Error ", err);
-    })
+    console.log(formData);
+    axios
+      .post("http://localhost:4000/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log("Success ", res);
+      })
+      .catch((err) => {
+        console.log("Error ", err);
+      });
+
   };
 
   return (
@@ -79,9 +91,6 @@ function App() {
           <h1 className="title">GPT-Flashcards</h1>
           <h2 className="subtitle">Studying Supercharged by AI</h2>
         </div>
-        <a href="upload.html">
-          <button> Button </button>
-        </a>
       </div>
 
       <div>
@@ -92,7 +101,7 @@ function App() {
             setFiles(e.target.files[0]);
           }}
         />
-        <button onClick={(e) => upload(e)}>Submit</button>
+        <button onClick={(e) => upload(e)}>Generate</button>
       </div>
 
       <div className="container">
