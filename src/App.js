@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import FlashcardList from "./FlashcardList";
 import axios from "axios";
 import FormData from "form-data";
-import { GlobalWorkerOptions } from "pdfjs-dist/build/pdf.worker.entry";
 
 
 function App() {
@@ -38,28 +37,28 @@ function App() {
   // const pdfjs = (require("pdfjs-dist/build/pdf")).default;
 
   // Function to convert PDF to text
-  async function getContent(src) {
-    console.log("bp1");
-    const pdfjs = await import("../../node_modules/pdfjs-dist/build/pdf.js");
-    pdfjs.GlobalWorkerOptions.workerSrc =
-      "../../node_modules/pdfjs-dist/build/pdf.worker.js";
+  // async function getContent(src) {
+  //   console.log("bp1");
+  //   const pdfjs = await import("../../node_modules/pdfjs-dist/build/pdf.js");
+  //   pdfjs.GlobalWorkerOptions.workerSrc =
+  //     "../../node_modules/pdfjs-dist/build/pdf.worker.js";
 
-    console.log("bp2");
+  //   console.log("bp2");
 
-    const doc = await pdfjs.getDocument(src).promise;
-    console.log("bp3");
-    const page = await doc.getPage(1);
-    console.log("bp4");
-    return await page.getTextContent();
-  }
+  //   const doc = await pdfjs.getDocument(src).promise;
+  //   console.log("bp3");
+  //   const page = await doc.getPage(1);
+  //   console.log("bp4");
+  //   return await page.getTextContent();
+  // }
 
-  async function getItems(src) {
-    const content = await getContent(src);
-    const items = content.items.map((item) => {
-      console.log(item.str);
-    });
-    return items;
-  }
+  // async function getItems(src) {
+  //   const content = await getContent(src);
+  //   const items = content.items.map((item) => {
+  //     console.log(item.str);
+  //   });
+  //   return items;
+  // }
 
   /* Handle File Upload to Local Server */
   const [files, setFiles] = useState([]);
