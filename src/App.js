@@ -81,6 +81,20 @@ function App() {
         console.log("Error ", err);
       });
 
+
+      axios
+      .post("http://localhost:4000/generate", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log("Success ", res);
+      })
+      .catch((err) => {
+        console.log("Error ", err);
+      });
+
   };
 
   return (

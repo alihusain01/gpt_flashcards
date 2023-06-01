@@ -1,6 +1,6 @@
 import os
 import openai
-import authentication
+import server.authentication as authentication
 from pdf_parser import parse_pdf
 
 # API_KEY: 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

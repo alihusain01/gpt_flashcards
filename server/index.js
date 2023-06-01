@@ -17,6 +17,21 @@ app.post("/", (req, res) => {
         }
     });
     res.sendStatus(200);
+    
+})
+
+app.post("/generate", (req, res) => {
+
+const {PythonShell} = require('python-shell');
+
+PythonShell.run('script.py', null).then(messages=>{
+    console.log(messages);
+  });
+
+console.log("Outside the python shell");
+
+res.sendStatus(200);
+
 })
 
 app.listen(4000);
