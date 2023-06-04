@@ -3,7 +3,6 @@ import FlashcardList from "./FlashcardList";
 import axios from "axios";
 import FormData from "form-data";
 
-
 function App() {
   const [flashcards, setFlashcards] = useState(SAMPLE_FLASHCARDS);
   useEffect(() => {
@@ -33,33 +32,6 @@ function App() {
     return textArea.value;
   }
 
-  // Uploading PDF code
-  // const pdfjs = (require("pdfjs-dist/build/pdf")).default;
-
-  // Function to convert PDF to text
-  // async function getContent(src) {
-  //   console.log("bp1");
-  //   const pdfjs = await import("../../node_modules/pdfjs-dist/build/pdf.js");
-  //   pdfjs.GlobalWorkerOptions.workerSrc =
-  //     "../../node_modules/pdfjs-dist/build/pdf.worker.js";
-
-  //   console.log("bp2");
-
-  //   const doc = await pdfjs.getDocument(src).promise;
-  //   console.log("bp3");
-  //   const page = await doc.getPage(1);
-  //   console.log("bp4");
-  //   return await page.getTextContent();
-  // }
-
-  // async function getItems(src) {
-  //   const content = await getContent(src);
-  //   const items = content.items.map((item) => {
-  //     console.log(item.str);
-  //   });
-  //   return items;
-  // }
-
   /* Handle File Upload to Local Server */
   const [files, setFiles] = useState([]);
 
@@ -68,6 +40,10 @@ function App() {
     let formData = new FormData();
     formData.append("screenshot", files);
     console.log(formData);
+
+    // Filename with Date Timestamp Prefix
+    let generated_filename;
+
     axios
       .post("http://localhost:4000/", formData, {
         headers: {
@@ -76,25 +52,29 @@ function App() {
       })
       .then((res) => {
         console.log("Success ", res);
+        generated_filename = res.data;
+
+        let python_script_data = new FormData();
+        python_script_data.append("Filename", generated_filename);
+
+        // Call Python Script to Generate Flashcards
+        axios
+          .post("http://localhost:4000/generate", python_script_data, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          })
+          .then((res) => {
+            console.log("Success ", res);
+          })
+          .catch((err) => {
+            console.log("Error ", err);
+          });
+
       })
       .catch((err) => {
         console.log("Error ", err);
       });
-
-
-      axios
-      .post("http://localhost:4000/generate", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        console.log("Success ", res);
-      })
-      .catch((err) => {
-        console.log("Error ", err);
-      });
-
   };
 
   return (
