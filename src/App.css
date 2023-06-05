@@ -1,10 +1,10 @@
 body {
-    background-color: #eff2f7;
-    margin: 0;
-    font-family: Arial;
+  background-color: #eff2f7;
+  margin: 0;
+  font-family: Arial;
 }
 
-button{
+button {
   background-color: #ffffff;
   border: none;
   color: rgb(0, 0, 0);
@@ -17,100 +17,134 @@ button{
   cursor: pointer;
 }
 
-.upload-box{
-    padding: 1 rem;
-    margin: 20px;
+.upload-box {
+    /* border: 2px black;
+    border-style: solid; */
+    float: right;
+    margin-right: 100px;
+    /* margin-top: 25px; */
 }
 
-.nav-bar{
-    position: relative;
-    justify-content: center;
-    background-color: #a0bbe7;
-    padding: 1rem 2rem;
-    box-shadow: 0 0 5px 2px rgba(0,0,0,.2); 
+@media (max-width: 855px){
+    .upload-box{
+        float: left;
+    }
 }
 
-.titles{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.file-button {
+  background-color: #ffffff;
+  border: none;
+  color: rgb(0, 0, 0);
+  padding: 15px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: px;
+  border-radius: 5px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
-.title{
-    /* position: relative; */
-    justify-content: center;
-    margin-bottom: 0;
-    color: rgb(44, 44, 44);
+.nav-bar {
+  position: relative;
+  justify-content: center;
+  background-color: #a0bbe7;
+  padding: 1rem 2rem;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
+  /* border: 2px black;
+  border-style: solid; */
+  width: 100%;
+  min-height: 100px;
+  overflow: hidden;
 }
 
-.subtitle{
-    /* position: relative; */
-    margin-top: 0;
-    color: rgb(102, 102, 102);
+.titles {
+  display: flex;
+  float: left;
+  flex-direction: column;
+  margin-right: 20px;
+  /* margin-top: 25px; */
+  /* border: 2px black;
+  border-style: solid; */
+} 
+
+.title {
+  /* position: relative; */
+  justify-content: center;
+  margin-bottom: 0;
+  color: rgb(44, 44, 44);
 }
 
-.container{
-    max-width: 100%;
-    margin: 1 rem 2 rem;
+.subtitle {
+  /* position: relative; */
+  margin-top: 0;
+  color: rgb(102, 102, 102);
+}
+
+.container {
+  max-width: 100%;
+  margin: 1 rem 2 rem;
 }
 
 .card-grid {
-    display: grid;
-    align-items: center;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    border-radius: .25rem;
-    box-shadow: 0 0 5px 2px rgba(0,0,0,.1);
-    background-color: white;
-    transform-style: preserve-3d;
-    transform: perspective(1000px)  rotateY(var(--rotate-y, 0)) translateY(var(--translate-y, 0));
-    cursor: pointer;
-    transition: 150ms;
-    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateY(var(--rotate-y, 0))
+    translateY(var(--translate-y, 0));
+  cursor: pointer;
+  transition: 150ms;
 }
 
 .card:hover {
-    --translate-y: -2px;
-    box-shadow: 0 0 5px 2px rgba(0,0,0,.5);
+  --translate-y: -2px;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.5);
 }
 
 .card.flip {
-    --rotate-y: 180deg;
+  --rotate-y: 180deg;
 }
 
 .card .front,
-.card .back{
-    position: absolute;
-    padding: 1rem;
-    backface-visibility: hidden;
+.card .back {
+  position: absolute;
+  padding: 1rem;
+  backface-visibility: hidden;
 }
 
-.card .front{
-    left: 0;
+.card .front {
+  left: 0;
+  font-weight: bold;
 }
 
 .card .back {
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
 .flashcard-options {
-    margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 
-.flashcard-option{
-    margin-top: .25 rem;
-    color: #555;
-    font-size: .75 rem;
+.flashcard-option {
+  margin-top: 0.25 rem;
+  color: #555;
+  font-size: 0.75 rem;
 }
 
 .flashcard-option:first-child {
-    margin-top: 0;
+  margin-top: 0;
 }

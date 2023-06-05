@@ -106,19 +106,20 @@ function App() {
           <h1 className="title">GPT-Flashcards</h1>
           <h2 className="subtitle">Studying Supercharged by AI</h2>
         </div>
-      </div>
 
-      <div className = "upload-box">
-        <label> 
-        <input
-          type="file"
-          name="screenshot"
-          onChange={(e) => {
-            setFiles(e.target.files[0]);
-          }}
-          />
-        </label>
+        <div className="upload-box">
+          <label className="file-button">
+            <input
+              type="file"
+              name="screenshot"
+              onChange={(e) => {
+                setFiles(e.target.files[0]);
+              }}
+            />
+          </label>
         <button onClick={(e) => upload(e)}>Generate</button>
+        </div>
+
       </div>
 
       <div className="container">
@@ -140,7 +141,7 @@ const FLASHCARD_SET = [
   {
     term: "What is 2 + 1?",
     definition: "3",
-  }
+  },
 ];
 
 export default App;
