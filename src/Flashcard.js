@@ -33,11 +33,11 @@ export default function Flashcard({ flashcard }) {
     >
       <div className="front" ref={frontEl}>
         {flashcard.question}
-        <div className="flashcard-options">
+        {/* <div className="flashcard-options">
           {flashcard.options.map((option) => {
             return <div className="flashcard-option">{option}</div>;
           })}
-        </div>
+        </div> */}
       </div>
       <div className="back" ref={backEl}>
         {flashcard.answer}

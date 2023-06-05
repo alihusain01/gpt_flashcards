@@ -4,26 +4,45 @@ import axios from "axios";
 import FormData from "form-data";
 
 function App() {
-  const [flashcards, setFlashcards] = useState(SAMPLE_FLASHCARDS);
+  let [flashcards, setFlashcards] = useState(FLASHCARD_SET);
+  const [newFlashcards, setNewFlashcards] = useState(1);
   useEffect(() => {
-    axios.get("https://opentdb.com/api.php?amount=10").then((res) => {
+    /* axios.get("https://opentdb.com/api.php?amount=10").then((res) => {
+      console.log(res);
       setFlashcards(
         res.data.results.map((questionItem, index) => {
           const answer = decodeString(questionItem.correct_answer);
-          const options = [
-            ...questionItem.incorrect_answers.map((a) => decodeString(a)),
-            answer,
-          ];
+          // const options = [
+          //   ...questionItem.incorrect_answers.map((a) => decodeString(a)),
+          //   answer,
+          // ];
           return {
             id: `${index}-${Date.now()}`,
             question: decodeString(questionItem.question),
             answer: answer,
-            options: options.sort(() => Math.random() - 0.5),
+            // options: options.sort(() => Math.random() - 0.5),
           };
         })
       );
-    });
-  }, []);
+    }); */
+    if (newFlashcards != 0) {
+      setFlashcards(
+        flashcards.map((questionItem, index) => {
+          const answer = questionItem.definition;
+          // const options = [
+          //   ...questionItem.incorrect_answers.map((a) => decodeString(a)),
+          //   answer,
+          // ];
+          return {
+            id: `${index}-${Date.now()}`,
+            question: decodeString(questionItem.term),
+            answer: answer,
+            // options: options.sort(() => Math.random() - 0.5),
+          };
+        })
+      );
+    }
+  }, [newFlashcards]);
 
   /* Helper function for the above question API which can be deleted later */
   function decodeString(str) {
@@ -62,15 +81,18 @@ function App() {
           .post("http://localhost:4000/generate", python_script_data, {
             headers: {
               "Content-Type": "multipart/form-data",
-            }
+            },
           })
           .then((res) => {
             console.log("Success ", res);
+            setFlashcards(res.data);
+            console.log(FLASHCARD_SET);
+            console.log("flashcard state: " + newFlashcards);
+            setNewFlashcards(newFlashcards + 1);
           })
           .catch((err) => {
             console.log("Error ", err);
           });
-
       })
       .catch((err) => {
         console.log("Error ", err);
@@ -86,14 +108,16 @@ function App() {
         </div>
       </div>
 
-      <div>
+      <div className = "upload-box">
+        <label> 
         <input
           type="file"
           name="screenshot"
           onChange={(e) => {
             setFiles(e.target.files[0]);
           }}
-        />
+          />
+        </label>
         <button onClick={(e) => upload(e)}>Generate</button>
       </div>
 
@@ -104,25 +128,19 @@ function App() {
   );
 }
 
-const SAMPLE_FLASHCARDS = [
+const FLASHCARD_SET = [
   {
-    id: 1,
-    question: "What is 2 + 2?",
-    answer: "4",
-    options: ["2", "3", "4", "5"],
+    term: "What is 2 + 2?",
+    definition: "4",
   },
   {
-    id: 2,
-    question: "What is 2 + 3?",
-    answer: "5",
-    options: ["2", "3", "4", "5"],
+    term: "What is 2 + 3?",
+    definition: "5",
   },
   {
-    id: 3,
-    question: "What is 2 + 1?",
-    answer: "3",
-    options: ["2", "3", "4", "5"],
-  },
+    term: "What is 2 + 1?",
+    definition: "3",
+  }
 ];
 
 export default App;

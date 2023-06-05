@@ -17,6 +17,11 @@ button{
   cursor: pointer;
 }
 
+.upload-box{
+    padding: 1 rem;
+    margin: 20px;
+}
+
 .nav-bar{
     position: relative;
     justify-content: center;
