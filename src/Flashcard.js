@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 export default function Flashcard({ flashcard }) {
-  // Look up wtf a useState is
-  // Look up what React hook is
   const [flip, setFlip] = useState(false);
   const [height, setHeight] = useState("initial");
   const frontEl = useRef();

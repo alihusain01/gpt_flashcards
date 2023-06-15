@@ -27,7 +27,7 @@ def make_response(prompt):
   response = openai.ChatCompletion.create(
               model="gpt-3.5-turbo",
               messages = [
-                        {"role": "user", "content": "Make 15 flashcards from the following text in the form of a json string I can easily convert using JSON.parse: " + prompt + "\n"}
+                        {"role": "user", "content": "Make 15 flashcards from the following text in the form of a json string using key values term and definition" + prompt + "\n"}
                         ],
               temperature = 0
           )

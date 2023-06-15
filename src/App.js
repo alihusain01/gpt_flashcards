@@ -2,42 +2,22 @@ import React, { useEffect, useState } from "react";
 import FlashcardList from "./FlashcardList";
 import axios from "axios";
 import FormData from "form-data";
+import Button from "react-bootstrap/Button";
+import PropTypes from "prop-types";
 
 function App() {
   let [flashcards, setFlashcards] = useState(FLASHCARD_SET);
   const [newFlashcards, setNewFlashcards] = useState(1);
+
   useEffect(() => {
-    /* axios.get("https://opentdb.com/api.php?amount=10").then((res) => {
-      console.log(res);
-      setFlashcards(
-        res.data.results.map((questionItem, index) => {
-          const answer = decodeString(questionItem.correct_answer);
-          // const options = [
-          //   ...questionItem.incorrect_answers.map((a) => decodeString(a)),
-          //   answer,
-          // ];
-          return {
-            id: `${index}-${Date.now()}`,
-            question: decodeString(questionItem.question),
-            answer: answer,
-            // options: options.sort(() => Math.random() - 0.5),
-          };
-        })
-      );
-    }); */
-    if (newFlashcards != 0) {
+    if (newFlashcards !== 0) {
       setFlashcards(
         flashcards.map((questionItem, index) => {
           const answer = questionItem.definition;
-          // const options = [
-          //   ...questionItem.incorrect_answers.map((a) => decodeString(a)),
-          //   answer,
-          // ];
           return {
             id: `${index}-${Date.now()}`,
             question: decodeString(questionItem.term),
             answer: answer,
-            // options: options.sort(() => Math.random() - 0.5),
           };
         })
       );
@@ -50,6 +30,74 @@ function App() {
     textArea.innerHTML = str;
     return textArea.value;
   }
+
+  function LoadingButton({ files }) {
+    const [isLoading, setLoading] = useState(false);
+
+    useEffect(() => {
+      function simulateNetworkRequest() {
+        let formData = new FormData();
+        formData.append("screenshot", files);
+
+        let generated_filename;
+
+        return axios
+          .post("http://localhost:4000/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then((res) => {
+            console.log("Success ", res);
+            generated_filename = res.data;
+
+            let python_script_data = new FormData();
+            python_script_data.append("Filename", generated_filename);
+
+            return axios.post(
+              "http://localhost:4000/generate",
+              python_script_data,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              }
+            );
+          })
+          .then((res) => {
+            console.log("Success ", res);
+            setFlashcards(res.data);
+            setNewFlashcards(newFlashcards + 1);
+          })
+          .catch((err) => {
+            console.log("Error ", err);
+          });
+      }
+
+      if (isLoading) {
+        simulateNetworkRequest().then(() => {
+          setLoading(false);
+        });
+      }
+    }, [isLoading]);
+
+    const handleClick = () => setLoading(true);
+
+    return (
+      <Button
+        variant="primary"
+        disabled={isLoading}
+        onClick={!isLoading ? handleClick : null}
+      >
+        {isLoading ? "Loading…" : "Generate"}
+      </Button>
+    );
+  }
+
+  LoadingButton.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    files: PropTypes.array.isRequired,
+  };
 
   /* Handle File Upload to Local Server */
   const [files, setFiles] = useState([]);
@@ -117,9 +165,9 @@ function App() {
               }}
             />
           </label>
-        <button onClick={(e) => upload(e)}>Generate</button>
+          <LoadingButton files={files} className="button-loader" />
+          {/* <button onClick={(e) => upload(e)}>Generate</button> */}
         </div>
-
       </div>
 
       <div className="container">
